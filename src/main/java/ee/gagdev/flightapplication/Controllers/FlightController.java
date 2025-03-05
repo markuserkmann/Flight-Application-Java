@@ -31,4 +31,6 @@ public class FlightController {
         );
         return response.getData();
     }
+
+    // Need to add a function to remove all the un needed flights, like what are cancelled. Need to add a randomly generated price to each flight.
 }
