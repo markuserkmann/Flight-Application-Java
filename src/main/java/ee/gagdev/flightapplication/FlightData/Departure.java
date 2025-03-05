@@ -1,4 +1,4 @@
-package ee.gagdev.flightapplication.Api;
+package ee.gagdev.flightapplication.FlightData;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -64,5 +64,4 @@ public class Departure {
     public String getActual_runway() {
         return actual_runway;
     }
-
 }

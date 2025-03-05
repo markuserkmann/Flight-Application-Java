@@ -1,4 +1,4 @@
-package ee.gagdev.flightapplication.Api;
+package ee.gagdev.flightapplication.FlightData;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -8,37 +8,15 @@ public class Airline {
     private String iata;
     private String icao;
 
-    // Getters and Setters
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getIata() {
         return iata;
     }
 
-    public void setIata(String iata) {
-        this.iata = iata;
-    }
-
     public String getIcao() {
         return icao;
-    }
-
-    public void setIcao(String icao) {
-        this.icao = icao;
-    }
-
-    @Override
-    public String toString() {
-        return "Airline{" +
-                "name='" + name + '\'' +
-                ", iata='" + iata + '\'' +
-                ", icao='" + icao + '\'' +
-                '}';
     }
 }

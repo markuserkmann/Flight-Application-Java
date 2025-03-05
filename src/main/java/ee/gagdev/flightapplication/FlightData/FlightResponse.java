@@ -1,17 +1,16 @@
-package ee.gagdev.flightapplication.Api;
+package ee.gagdev.flightapplication.FlightData;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true) // This ignores the "pagination" field and any others you don't map.
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FlightResponse {
     private List<FlightData> data;
 
     public List<FlightData> getData() {
         return data;
     }
-
-    public void setData(List<FlightData> data) {
-        this.data = data;
-    }
 }
+
+// These classes were generated using AI to speed up development.

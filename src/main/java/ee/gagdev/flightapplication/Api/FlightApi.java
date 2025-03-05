@@ -1,17 +1,34 @@
 package ee.gagdev.flightapplication.Api;
 
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Component
 public class FlightApi {
-    private boolean ApiLoaded = false;
-    private final FlightApiService flightapiService;
+    private boolean apiLoaded = false;
+    private final FlightApiService flightApiService;
 
-    public FlightApi(FlightApiService flightapiService) {
-        this.flightapiService = flightapiService;
+    @Autowired
+    public FlightApi(FlightApiService flightApiService) {
+        this.flightApiService = flightApiService;
     }
 
-    public void FetchFlightsInfo() {
-        System.out.println(flightapiService.getApiResponse());
+    public void isFlightsDataLoaded() {
+        if (!apiLoaded) {
+            try {
+                String apiData = flightApiService.getApiResponse();
+                String jsonFilePath = "src/main/resources/flights.json";
+                Files.write(Paths.get(jsonFilePath), apiData.getBytes(StandardCharsets.UTF_8));
+
+                apiLoaded = true;
+            } catch (IOException e) {
+                System.out.println("Error in getting API response: " + e.getMessage());
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package ee.gagdev.flightapplication.Api;
+package ee.gagdev.flightapplication.FlightData;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -18,55 +18,35 @@ public class Arrival {
     private String estimated_runway;
     private String actual_runway;
 
-    // Getters and Setters
-
     public String getAirport() {
         return airport;
     }
 
-    public void setAirport(String airport) {
-        this.airport = airport;
-    }
 
     public String getTimezone() {
         return timezone;
     }
 
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
 
     public String getIata() {
         return iata;
     }
 
-    public void setIata(String iata) {
-        this.iata = iata;
-    }
 
     public String getIcao() {
         return icao;
     }
 
-    public void setIcao(String icao) {
-        this.icao = icao;
-    }
 
     public String getTerminal() {
         return terminal;
     }
 
-    public void setTerminal(String terminal) {
-        this.terminal = terminal;
-    }
 
     public String getGate() {
         return gate;
     }
 
-    public void setGate(String gate) {
-        this.gate = gate;
-    }
 
     public String getBaggage() {
         return baggage;
@@ -122,24 +102,5 @@ public class Arrival {
 
     public void setActual_runway(String actual_runway) {
         this.actual_runway = actual_runway;
-    }
-
-    @Override
-    public String toString() {
-        return "Arrival{" +
-                "airport='" + airport + '\'' +
-                ", timezone='" + timezone + '\'' +
-                ", iata='" + iata + '\'' +
-                ", icao='" + icao + '\'' +
-                ", terminal='" + terminal + '\'' +
-                ", gate='" + gate + '\'' +
-                ", baggage='" + baggage + '\'' +
-                ", delay=" + delay +
-                ", scheduled='" + scheduled + '\'' +
-                ", estimated='" + estimated + '\'' +
-                ", actual='" + actual + '\'' +
-                ", estimated_runway='" + estimated_runway + '\'' +
-                ", actual_runway='" + actual_runway + '\'' +
-                '}';
     }
 }
