@@ -25,9 +25,8 @@ public class FlightGenerator {
 
     public static List<FlightData> generateNewFlights() {
         List<FlightData> flights = new ArrayList<>();
-        for (String country: europeanCountries) {
+        for (String country : europeanCountries) {
             FlightData flight = new FlightData();
-            Random random = new Random();
 
             String DepartureCountry = country + " International";
             String RandomArrivalCountry = europeanCountries.get(random.nextInt(europeanCountries.size())) + " International";
@@ -36,8 +35,6 @@ public class FlightGenerator {
             flight.setFlight_status("scheduled");
             int FlightPrice = random.nextInt(231) + 350;
             flight.setFlightPrice(FlightPrice);
-            int Test = random.nextInt(231) + 350;
-            System.out.println(Test);
 
             Departure departure = new Departure();
             departure.setAirport(DepartureCountry);
