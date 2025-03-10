@@ -11,7 +11,6 @@ public class FlightData {
     private Airline airline;
     private Flight flight;
     private Object aircraft;
-    private Object live;
 
     public String getFlight_date() {
         return flight_date;
@@ -39,9 +38,5 @@ public class FlightData {
 
     public Object getAircraft() {
         return aircraft;
-    }
-
-    public Object getLive() {
-        return live;
     }
 }
