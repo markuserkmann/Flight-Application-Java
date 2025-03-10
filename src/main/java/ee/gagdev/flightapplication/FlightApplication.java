@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import static ee.gagdev.flightapplication.Api.FlightGenerator.generateNewFlights;
+
 
 @SpringBootApplication
 public class FlightApplication {
@@ -15,12 +17,11 @@ public class FlightApplication {
     }
 
     // This ↓↓ code was got from Stackoverflow, i didn't find a way myself to get the API data on script startup
-
- //   @Bean
- //   CommandLineRunner run(ApplicationContext ctx) {
- //       return args -> {
- //           FlightApi flightApi = ctx.getBean(FlightApi.class);
- //           flightApi.isFlightsDataLoaded();
- //       };
- //   }
+    @Bean
+    CommandLineRunner run(ApplicationContext ctx) {
+       return args -> {
+            FlightApi flightApi = ctx.getBean(FlightApi.class);
+            flightApi.isFlightsDataLoaded();
+        };
+    }
 }
