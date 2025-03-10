@@ -11,7 +11,7 @@ public class FlightData {
     private Airline airline;
     private Flight flight;
     private Object aircraft;
-    private int flight_price;
+    private int flight_price;  // Change to int
 
     public int getFlightPrice() {
         return flight_price;
@@ -77,5 +77,3 @@ public class FlightData {
         this.aircraft = aircraft;
     }
 }
-
-// These classes were generated using AI to speed up development.

@@ -32,9 +32,12 @@ public class FlightGenerator {
             String DepartureCountry = country + " International";
             String RandomArrivalCountry = europeanCountries.get(random.nextInt(europeanCountries.size())) + " International";
 
-            flight.setFlight_date("2025-" + String.format("%02d", random.nextInt(12) + 1) + "-" + String.format("%02d", random.nextInt(28) + 1));
+            flight.setFlight_date("2025-" + String.format("%02d", random.nextInt(12) + 5) + "-" + String.format("%02d", random.nextInt(28) + 1));
             flight.setFlight_status("scheduled");
-            flight.setFlightPrice(random.nextInt(231) + 350);
+            int FlightPrice = random.nextInt(231) + 350;
+            flight.setFlightPrice(FlightPrice);
+            int Test = random.nextInt(231) + 350;
+            System.out.println(Test);
 
             Departure departure = new Departure();
             departure.setAirport(DepartureCountry);

@@ -36,8 +36,8 @@ public class FlightApi {
 
                 // Sets the price betweeen 350-580 for each flight. Will be modified later to adapt different seating options (first class, business etc)
                 for (FlightData flight : response.getData()) {
-                    int price = random.nextInt(231) + 350;
-                    flight.setFlightPrice(price);
+                    int FlightPrice = random.nextInt(231) + 350;
+                    flight.setFlightPrice(FlightPrice);
                 }
                 List<FlightData> generatedFlights = FlightGenerator.generateNewFlights();
 
