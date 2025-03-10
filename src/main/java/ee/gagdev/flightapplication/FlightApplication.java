@@ -14,7 +14,7 @@ public class FlightApplication {
         SpringApplication.run(FlightApplication.class, args);
     }
 
-    // This code was got from Stackoverflow, i didn't find a way myself to get the API data on script startup
+    // This ↓↓ code was got from Stackoverflow, i didn't find a way myself to get the API data on script startup
 
  //   @Bean
  //   CommandLineRunner run(ApplicationContext ctx) {

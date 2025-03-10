@@ -3,35 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flights Information</title>
+    <title>Lennuplaan</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans text-gray-900">
-
+<div class="max-w-5xl mx-auto">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Lendude Informatsioon</h1>
-        
-        <div class="overflow-x-auto shadow-lg rounded-lg">
-            <table class="min-w-full bg-white border-collapse">
-                <thead>
-                    <tr class="bg-gray-200 text-gray-700">
-                        <th class="px-6 py-3 text-left">Lennuaeg</th>
-                        <th class="px-6 py-3 text-left">Lennu Staatus</th>
-                        <th class="px-6 py-3 text-left">Väljumis Lennujaam</th>
-                        <th class="px-6 py-3 text-left">Jõudmis Lennujaam</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="flight : ${flights}" class="border-b">
-                        <td th:text="${flight.flight_date}" class="px-6 py-3 text-gray-700"></td>
-                        <td th:text="${flight.flight_status}" class="px-6 py-3 text-gray-700"></td>
-                        <td th:text="${flight.departure.airport}" class="px-6 py-3 text-gray-700"></td>
-                        <td th:text="${flight.arrival.airport}" class="px-6 py-3 text-gray-700"></td>
-                    </tr>
-                </tbody>
-            </table>
+        <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Lennuplaan</h1>
+        <button id="toggleFilters" class="px-4 py-2 bg-blue-600 text-white rounded-md">Filtrid</button>
+
+        <div id="filterPanel" class="mt-4 bg-white p-4 rounded-lg shadow hidden">
+            <div class="flex border-b">
+                <button class="tab-link px-4 py-2 text-gray-600 border-b-2 border-transparent focus:outline-none" data-tab="status">Staatus</button>
+                <button class="tab-link px-4 py-2 text-gray-600 border-b-2 border-transparent focus:outline-none" data-tab="departures">Väljumis Lennujaam</button>
+                <button class="tab-link px-4 py-2 text-gray-600 border-b-2 border-transparent focus:outline-none" data-tab="arrivals">Jõudmis Lennujaam</button>
+            </div>
+
+            <input type="text" id="FilterSearchInput" class="w-full p-2 border rounded mt-3" placeholder="Otsi...">
+
+            <div class="tab-content mt-3" id="status">
+                <label class="block"><input type="checkbox" class="filter-option" value="scheduled"> Scheduled</label>
+                <label class="block"><input type="checkbox" class="filter-option" value="delayed"> Delayed</label>
+                <label class="block"><input type="checkbox" class="filter-option" value="cancelled"> Cancelled</label>
+            </div>
+
+            <div class="tab-content mt-3 hidden" id="departures">
+                <!-- Departured siin -->
+            </div>
+
+            <div class="tab-content mt-3 hidden" id="arrivals">
+                <!-- Arrivalid siin -->
+            </div>
         </div>
     </div>
+
+    <div class="overflow-x-auto shadow-lg rounded-lg">
+        <table class="min-w-full bg-white border-collapse">
+            <thead>
+            <tr class="bg-gray-200 text-gray-700">
+                <th class="px-6 py-3 text-left">Lennuaeg</th>
+                <th class="px-6 py-3 text-left">Lennu Staatus</th>
+                <th class="px-6 py-3 text-left">Väljumis Lennujaam</th>
+                <th class="px-6 py-3 text-left">Jõudmis Lennujaam</th>
+            </tr>
+            </thead>
+            <tbody id="flightTable">
+            <tr th:each="flight : ${flights}" class="border-b flight-row"
+                th:data-status="${flight.flight_status}"
+                th:data-departure="${flight.departure.airport}"
+                th:data-arrival="${flight.arrival.airport}">
+                <td th:text="${flight.flight_date}" class="px-6 py-3 text-gray-700"></td>
+                <td th:text="${flight.flight_status}" class="px-6 py-3 text-gray-700"></td>
+                <td th:text="${flight.departure.airport}" class="px-6 py-3 text-gray-700"></td>
+                <td th:text="${flight.arrival.airport}" class="px-6 py-3 text-gray-700"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    let Departures = [];
+    let Arrivals = [];
+
+    let FlightData = [[${flights}]];
+
+    window.onload = function () {
+        const departuresContainer = document.getElementById("departures");
+        const arrivalsContainer = document.getElementById("arrivals");
+
+        for (let i = 0; i < FlightData.length; i++) {
+            let ArrivalAirport = FlightData[i].arrival.airport;
+            let DepartureAirport = FlightData[i].departure.airport;
+            if (!Arrivals.includes(ArrivalAirport)) {
+                Arrivals.push(ArrivalAirport);
+                let ArrivalLabel = document.createElement("label");
+                ArrivalLabel.classList.add("block");
+                ArrivalLabel.innerHTML = `<input type="checkbox" class="filter-option" value="${ArrivalAirport}"> ${ArrivalAirport}`;
+                arrivalsContainer.appendChild(ArrivalLabel);
+            }
+            if (!Departures.includes(DepartureAirport)) {
+                Departures.push(DepartureAirport);
+                let departureLabel = document.createElement("label");
+                departureLabel.classList.add("block");
+                departureLabel.innerHTML = `<input type="checkbox" class="filter-option" value="${DepartureAirport}"> ${DepartureAirport}`;
+                departuresContainer.appendChild(departureLabel);
+            }
+        }
+        addEventListenersToFilters();
+    }
+
+    document.getElementById('toggleFilters').addEventListener('click', function() {
+        let filterPanel = document.getElementById('filterPanel');
+        if (filterPanel) {
+            if (filterPanel.classList.contains('hidden')) {
+                filterPanel.classList.remove('hidden');
+            } else {
+                filterPanel.classList.add('hidden');
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.tab-link').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab-link').forEach(t => {
+                    t.classList.remove('border-blue-500', 'text-blue-600');
+                });
+
+                this.classList.add('border-blue-500', 'text-blue-600');
+
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                let selectedTab = this.getAttribute('data-tab');
+                document.getElementById(selectedTab).classList.remove('hidden');
+            });
+        });
+    });
+
+    document.getElementById('FilterSearchInput').addEventListener('input', function() {
+        let SearchValue = this.value.toLowerCase();
+        let FilterOptions = document.querySelectorAll('.tab-content:not(.hidden) .filter-option');
+
+        FilterOptions.forEach(option => {
+            let HTMLLabel = option.parentElement;
+            let FilterOptionValue = option.value.toLowerCase();
+
+            if (FilterOptionValue.includes(SearchValue)) {
+                HTMLLabel.style.display = 'block';
+            } else {
+                HTMLLabel.style.display = 'none';
+            }
+        });
+    });
+
+    function addEventListenersToFilters() {
+        document.querySelectorAll('.filter-option').forEach(option => {
+            option.addEventListener('change', function() {
+                let selectedFilters = {
+                    status: [],
+                    departure: [],
+                    arrival: []
+                };
+
+                let StatusFilterOptions = document.querySelectorAll('#status .filter-option:checked');
+                StatusFilterOptions.forEach(cb => {
+                    selectedFilters.status.push(cb.value);
+                });
+
+                let DepartureFilterOptions = document.querySelectorAll('#departures .filter-option:checked');
+                DepartureFilterOptions.forEach(cb => {
+                    selectedFilters.departure.push(cb.value);
+                });
+
+                let ArrivalFilterOptions = document.querySelectorAll('#arrivals .filter-option:checked');
+                ArrivalFilterOptions.forEach(cb => {
+                    selectedFilters.arrival.push(cb.value);
+                });
+
+                document.querySelectorAll('.flight-row').forEach(row => {
+                    let flightStatus = row.getAttribute('data-status');
+                    let departureAirport = row.getAttribute('data-departure');
+                    let arrivalAirport = row.getAttribute('data-arrival');
+
+                    let mStatus = selectedFilters.status.length === 0 || selectedFilters.status.includes(flightStatus);
+                    let mDeparture = selectedFilters.departure.length === 0 || selectedFilters.departure.includes(departureAirport);
+                    let mArrival = selectedFilters.arrival.length === 0 || selectedFilters.arrival.includes(arrivalAirport);
+
+                    if (mStatus && mDeparture && mArrival) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    }
+</script>
 
 </body>
 </html>
