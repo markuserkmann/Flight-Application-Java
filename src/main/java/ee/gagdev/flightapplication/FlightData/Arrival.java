@@ -17,6 +17,10 @@ public class Arrival {
         return airport;
     }
 
+    public void setAirport(String airport) {
+        this.airport = airport;
+    }
+
     public String getTimezone() {
         return timezone;
     }
@@ -29,7 +33,6 @@ public class Arrival {
     public String getGate() {
         return gate;
     }
-
 
     public String getBaggage() {
         return baggage;

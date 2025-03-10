@@ -12,5 +12,3 @@ public class FlightResponse {
         return data;
     }
 }
-
-// These classes were generated using AI to speed up development.

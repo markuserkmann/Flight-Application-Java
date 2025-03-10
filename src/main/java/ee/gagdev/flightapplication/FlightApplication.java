@@ -16,11 +16,11 @@ public class FlightApplication {
 
     // This ↓↓ code was got from Stackoverflow, i didn't find a way myself to get the API data on script startup
 
- //   @Bean
- //   CommandLineRunner run(ApplicationContext ctx) {
- //       return args -> {
- //           FlightApi flightApi = ctx.getBean(FlightApi.class);
- //           flightApi.isFlightsDataLoaded();
- //       };
- //   }
+    @Bean
+    CommandLineRunner run(ApplicationContext ctx) {
+        return args -> {
+            FlightApi flightApi = ctx.getBean(FlightApi.class);
+            flightApi.isFlightsDataLoaded();
+        };
+    }
 }
