@@ -10,8 +10,4 @@ public class Flight {
         return number;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
 }
