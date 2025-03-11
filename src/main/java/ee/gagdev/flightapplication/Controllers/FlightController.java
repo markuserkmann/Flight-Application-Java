@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
 public class FlightController {
+
+    private static final String File_Path = "src/main/resources/flights.json";
 
     @GetMapping("/lennud")
     public String showFlights(Model model) throws IOException {
@@ -24,20 +27,13 @@ public class FlightController {
         return "flights";
     }
 
+    // Loads the flights data from a JSON file to reduce requests to the API
     private List<FlightData> fetchFlightsInfo() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         FlightResponse response = objectMapper.readValue(
-                new File("src/main/resources/flights.json"), FlightResponse.class
+                new File(File_Path), FlightResponse.class
         );
-        ProccessFlightsInfo(response.getData());
+
         return response.getData();
     }
-
-    private List<FlightData> ProccessFlightsInfo(List<FlightData> Flights) throws IOException {
-        for (FlightData flightData : Flights) {
-            System.out.println(flightData.getFlight().getNumber());
-        }
-        return Flights;
-    }
-    // Need to add a function to remove all the un needed flights, like what are cancelled. Need to add a randomly generated price to each flight.
 }

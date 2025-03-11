@@ -10,29 +10,27 @@
 <div class="max-w-5xl mx-auto">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Lennuplaan</h1>
-        <button id="toggleFilters" class="px-4 py-2 bg-blue-600 text-white rounded-md">Filtrid</button>
+        <button id="toggleFilters" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Filtrid</button>
 
         <div id="filterPanel" class="mt-4 bg-white p-4 rounded-lg shadow hidden">
             <div class="flex border-b">
-                <button class="tab-link px-4 py-2 text-gray-600 border-b-2 border-transparent focus:outline-none" data-tab="status">Staatus</button>
                 <button class="tab-link px-4 py-2 text-gray-600 border-b-2 border-transparent focus:outline-none" data-tab="departures">Väljumis Lennujaam</button>
                 <button class="tab-link px-4 py-2 text-gray-600 border-b-2 border-transparent focus:outline-none" data-tab="arrivals">Jõudmis Lennujaam</button>
+                <button class="tab-link px-4 py-2 text-gray-600 border-b-2 border-transparent focus:outline-none" data-tab="price">Hind</button>
             </div>
 
             <input type="text" id="FilterSearchInput" class="w-full p-2 border rounded mt-3" placeholder="Otsi...">
 
-            <div class="tab-content mt-3" id="status">
-                <label class="block"><input type="checkbox" class="filter-option" value="scheduled"> Scheduled</label>
-                <label class="block"><input type="checkbox" class="filter-option" value="delayed"> Delayed</label>
-                <label class="block"><input type="checkbox" class="filter-option" value="cancelled"> Cancelled</label>
-            </div>
-
-            <div class="tab-content mt-3 hidden" id="departures">
-                <!-- Departured siin -->
-            </div>
-
-            <div class="tab-content mt-3 hidden" id="arrivals">
-                <!-- Arrivalid siin -->
+            <div class="tab-content mt-3 hidden" id="departures"></div>
+            <div class="tab-content mt-3 hidden" id="arrivals"></div>
+            <!-- Price Filter ui component made by AI -->
+            <div class="tab-content mt-3 hidden" id="price">
+                <label for="priceRange" class="block text-gray-700">Hinna vahemik</label>
+                <input type="range" id="priceRange" min="350" max="600" step="10" value="580" class="w-full mt-2">
+                <div class="flex justify-between">
+                    <span id="minPrice">350</span>
+                    <span id="maxPrice">600</span>
+                </div>
             </div>
         </div>
     </div>
@@ -42,20 +40,25 @@
             <thead>
             <tr class="bg-gray-200 text-gray-700">
                 <th class="px-6 py-3 text-left">Lennuaeg</th>
-                <th class="px-6 py-3 text-left">Lennu Staatus</th>
                 <th class="px-6 py-3 text-left">Väljumis Lennujaam</th>
                 <th class="px-6 py-3 text-left">Jõudmis Lennujaam</th>
+                <th class="px-6 py-3 text-left">Hind</th>
+                <th class="px-6 py-3 text-left">Broneerimine</th>
             </tr>
             </thead>
-            <tbody id="flightTable">
-            <tr th:each="flight : ${flights}" class="border-b flight-row"
-                th:data-status="${flight.flight_status}"
+            <tbody id="FlightsTable">
+            <tr th:each="flight, iter : ${flights}" class="border-b flight-row"
+                th:data-index="${iter.index}"
                 th:data-departure="${flight.departure.airport}"
-                th:data-arrival="${flight.arrival.airport}">
+                th:data-arrival="${flight.arrival.airport}"
+                th:data-price="${flight.flightPrice}">
                 <td th:text="${flight.flight_date}" class="px-6 py-3 text-gray-700"></td>
-                <td th:text="${flight.flight_status}" class="px-6 py-3 text-gray-700"></td>
                 <td th:text="${flight.departure.airport}" class="px-6 py-3 text-gray-700"></td>
                 <td th:text="${flight.arrival.airport}" class="px-6 py-3 text-gray-700"></td>
+                <td th:text="${flight.flightPrice}" class="px-6 py-3 text-gray-700"></td>
+                <td class="px-6 py-3">
+                    <button class="book-button px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" th:data-index="${iter.index}">Broneeri</button>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -65,9 +68,7 @@
 <script th:inline="javascript">
     let Departures = [];
     let Arrivals = [];
-
     let FlightData = [[${flights}]];
-    console.log(FlightData);
 
     window.onload = function () {
         const departuresContainer = document.getElementById("departures");
@@ -91,36 +92,21 @@
                 departuresContainer.appendChild(departureLabel);
             }
         }
-        addEventListenersToFilters();
+        addEventListeners();
     }
 
     document.getElementById('toggleFilters').addEventListener('click', function() {
         let filterPanel = document.getElementById('filterPanel');
-        if (filterPanel) {
-            if (filterPanel.classList.contains('hidden')) {
-                filterPanel.classList.remove('hidden');
-            } else {
-                filterPanel.classList.add('hidden');
-            }
-        }
+        filterPanel.classList.toggle('hidden');
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.tab-link').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.tab-link').forEach(t => {
-                    t.classList.remove('border-blue-500', 'text-blue-600');
-                });
+    document.querySelectorAll('.tab-link').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('border-blue-500', 'text-blue-600'));
+            this.classList.add('border-blue-500', 'text-blue-600');
 
-                this.classList.add('border-blue-500', 'text-blue-600');
-
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.add('hidden');
-                });
-
-                let selectedTab = this.getAttribute('data-tab');
-                document.getElementById(selectedTab).classList.remove('hidden');
-            });
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById(this.getAttribute('data-tab')).classList.remove('hidden');
         });
     });
 
@@ -131,57 +117,49 @@
         FilterOptions.forEach(option => {
             let HTMLLabel = option.parentElement;
             let FilterOptionValue = option.value.toLowerCase();
-
-            if (FilterOptionValue.includes(SearchValue)) {
-                HTMLLabel.style.display = 'block';
-            } else {
-                HTMLLabel.style.display = 'none';
-            }
+            HTMLLabel.style.display = FilterOptionValue.includes(SearchValue) ? 'block' : 'none';
         });
     });
 
-    function addEventListenersToFilters() {
-        document.querySelectorAll('.filter-option').forEach(option => {
-            option.addEventListener('change', function() {
-                let selectedFilters = {
-                    status: [],
-                    departure: [],
-                    arrival: []
-                };
-
-                let StatusFilterOptions = document.querySelectorAll('#status .filter-option:checked');
-                StatusFilterOptions.forEach(cb => {
-                    selectedFilters.status.push(cb.value);
-                });
-
-                let DepartureFilterOptions = document.querySelectorAll('#departures .filter-option:checked');
-                DepartureFilterOptions.forEach(cb => {
-                    selectedFilters.departure.push(cb.value);
-                });
-
-                let ArrivalFilterOptions = document.querySelectorAll('#arrivals .filter-option:checked');
-                ArrivalFilterOptions.forEach(cb => {
-                    selectedFilters.arrival.push(cb.value);
-                });
-
-                document.querySelectorAll('.flight-row').forEach(row => {
-                    let flightStatus = row.getAttribute('data-status');
-                    let departureAirport = row.getAttribute('data-departure');
-                    let arrivalAirport = row.getAttribute('data-arrival');
-
-                    let mStatus = selectedFilters.status.length === 0 || selectedFilters.status.includes(flightStatus);
-                    let mDeparture = selectedFilters.departure.length === 0 || selectedFilters.departure.includes(departureAirport);
-                    let mArrival = selectedFilters.arrival.length === 0 || selectedFilters.arrival.includes(arrivalAirport);
-
-                    if (mStatus && mDeparture && mArrival) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+    function addEventListeners() {
+        document.querySelectorAll('.filter-option').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+        document.querySelectorAll('.book-button').forEach(button => {
+            button.addEventListener('click', function() {
+                let index = this.getAttribute('data-index');
+                window.location.href = `/piletid/${index}`;
             });
         });
     }
+
+    function applyFilters() {
+        let selectedFilters = {
+            departure: [],
+            arrival: [],
+            price: parseFloat(document.getElementById("priceRange").value)
+        };
+
+        document.querySelectorAll('#departures .filter-option:checked').forEach(cb => selectedFilters.departure.push(cb.value));
+        document.querySelectorAll('#arrivals .filter-option:checked').forEach(cb => selectedFilters.arrival.push(cb.value));
+
+        document.querySelectorAll('.flight-row').forEach(row => {
+            let departureAirport = row.getAttribute('data-departure');
+            let arrivalAirport = row.getAttribute('data-arrival');
+            let flightPrice = parseFloat(row.dataset.price) || 0;
+            let mDeparture = selectedFilters.departure.length === 0 || selectedFilters.departure.includes(departureAirport);
+            let mArrival = selectedFilters.arrival.length === 0 || selectedFilters.arrival.includes(arrivalAirport);
+            let mPrice = flightPrice <= selectedFilters.price;
+
+            row.style.display = (mDeparture && mArrival && mPrice) ? '' : 'none';
+        });
+    }
+
+    document.getElementById('priceRange').addEventListener('input', function() {
+        document.getElementById('maxPrice').innerText = this.value;
+        applyFilters();
+    });
+
 </script>
 
 </body>
