@@ -1,22 +1,14 @@
-  # Stage 1: Build the application
-  FROM maven:3.8.4-openjdk-17 AS build
-
-  WORKDIR /app
-
-  COPY pom.xml .
-  COPY src ./src
-  RUN mvn clean package -DskipTests
-
-# Stage 2: Run the application
-FROM eclipse-temurin:17-jdk
-
+FROM jelastic/maven:3.9.5-openjdk-21 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy the packaged JAR file from the build stage
-COPY --from=build /app/target/*.jar FlightApplication.jar
-COPY src/main/resources/application.properties /app/application.properties
-
+FROM eclipse-temurin:21-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+COPY src/main/resources/application.properties ./application.properties
 EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "FlightApplication.jar"]
+# AI helped me build the DockerFile
