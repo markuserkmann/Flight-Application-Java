@@ -26,9 +26,6 @@
         <tag/>
         <url/>
     </scm>
-    <properties>
-        <java.version>23</java.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -66,6 +63,8 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
+
+
 
     <build>
         <plugins>
