@@ -29,7 +29,6 @@ public class Arrival {
         return terminal;
     }
 
-
     public String getGate() {
         return gate;
     }

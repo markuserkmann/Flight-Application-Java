@@ -2,6 +2,7 @@ package ee.gagdev.flightapplication.Api;
 
 import ee.gagdev.flightapplication.FlightData.FlightData;
 import ee.gagdev.flightapplication.FlightData.FlightResponse;
+import ee.gagdev.flightapplication.FlightData.Seats;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,12 +35,17 @@ public class FlightApi {
                 FlightResponse response = objectMapper.readValue(apiData, FlightResponse.class);
                 Random random = new Random();
 
-                // Sets the price betweeen 350-580 for each flight. Will be modified later to adapt different seating options (first class, business etc)
+                // Sets the price betweeen 350-580 for each flight. Adds 150 to economy plus and 300 to business on the client side.
                 for (FlightData flight : response.getData()) {
                     int FlightPrice = random.nextInt(231) + 350;
                     flight.setFlightPrice(FlightPrice);
+                    flight.setSeats(new Seats());
                 }
                 List<FlightData> generatedFlights = FlightGenerator.generateNewFlights();
+
+                for (FlightData flight : generatedFlights) {
+                    flight.setSeats(new Seats());
+                }
 
                 response.getData().addAll(generatedFlights);
 

@@ -10,6 +10,18 @@ html {
   max-width: 300px;
 }
 
+.row.business {
+  background-color: #FFD700;
+}
+
+.row.premium {
+  background-color: #C0C0C0;
+}
+
+.row.economy {
+  background-color: #B0E0E6;
+}
+
 .cockpit {
   height: 250px;
   position: relative;

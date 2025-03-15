@@ -12,14 +12,7 @@ public class FlightData {
     private Flight flight;
     private Object aircraft;
     private int flight_price;
-
-    public int getFlightPrice() {
-        return flight_price;
-    }
-
-    public void setFlightPrice(int flight_price) {
-        this.flight_price = flight_price;
-    }
+    private Seats seats;
 
     public String getFlight_date() {
         return flight_date;
@@ -75,5 +68,21 @@ public class FlightData {
 
     public void setAircraft(Object aircraft) {
         this.aircraft = aircraft;
+    }
+
+    public int getFlightPrice() {
+        return flight_price;
+    }
+
+    public void setFlightPrice(int flight_price) {
+        this.flight_price = flight_price;
+    }
+
+    public Seats getSeats() {
+        return seats;
+    }
+
+    public void setSeats(Seats seats) {
+        this.seats = seats;
     }
 }

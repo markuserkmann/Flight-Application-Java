@@ -44,4 +44,8 @@ public class Departure {
     public String getActual() {
         return actual;
     }
+
+    public void setAirport(String departureCountry) {
+        this.airport = departureCountry;
+    }
 }
